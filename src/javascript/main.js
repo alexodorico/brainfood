@@ -15,3 +15,21 @@ function searchForBooks(term) {
 function render() {
   // TODO
 }
+
+document.getElementById("search-btn").addEventListener("click", _ => {
+  const query = document.getElementById("search-bar").value;
+  const endpoint = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
+  const cached = localStorage.getItem(endpoint) || false;
+
+  if (cached) {
+    console.log('cached');
+  }
+
+  return fetch(endpoint).then(response => {
+    if (response.status === 200) {
+      response.json().then(data => {
+        localStorage.setItem(endpoint, JSON.stringify(data));
+      });
+    }
+  });
+});
