@@ -1,0 +1,13 @@
+.error {
+  color: red;
+}
+
+.tset {
+  color: blue;
+}
+
+$red: #fefefe;
+
+body {
+  color: $red;
+}
