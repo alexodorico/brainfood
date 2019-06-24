@@ -28,8 +28,18 @@ document.getElementById("search-btn").addEventListener("click", _ => {
   return fetch(endpoint).then(response => {
     if (response.status === 200) {
       response.json().then(data => {
+        console.log(data);
+        destructureResults(data.items);
         localStorage.setItem(endpoint, JSON.stringify(data));
       });
     }
   });
 });
+
+function destructureResults(data) {
+  // title, subtitle, authors, id, link, image
+  data.forEach(item => {
+    const { id, volumeInfo: { authors, title, subtitle, infoLink, imageLinks: { thumbnail }}} = item;
+    console.log(`ID: ${id}, authors: ${authors}, title: ${title}, subtitle: ${subtitle}, link: ${infoLink}, imagelink: ${thumbnail}`);
+  });
+}
