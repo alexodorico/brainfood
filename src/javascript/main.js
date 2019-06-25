@@ -1,30 +1,14 @@
 import '../scss/styles.scss';
 
-// Renders an error message
-function showError(msg) {
-  const html = `<li><p class="error">${msg}</p></li>`;
-  document.querySelector('#results').innerHTML = html;
-}
+document.getElementById("search-btn").addEventListener("click", searchForBooks);
 
 // Searches for books and returns a promise that resolves a JSON list
-function searchForBooks(term) {
-  // TODO
-}
-
-// Generate HTML and sets #results's contents to it
-function render(bookData) {
-  let markup = new String();
-  bookData.forEach(book => markup += createCard(book));
-  document.getElementById("results").innerHTML = markup;
-}
-
-document.getElementById("search-btn").addEventListener("click", _ => {
+function searchForBooks() {
   const query = document.getElementById("search-bar").value;
   const endpoint = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
   const cachedResults = localStorage.getItem(endpoint) || false;
 
   if (cachedResults) {
-    console.log('cachedResults');
     return render(JSON.parse(cachedResults));
   }
 
@@ -37,8 +21,9 @@ document.getElementById("search-btn").addEventListener("click", _ => {
       });
     }
   });
-});
+}
 
+// Uses object destructuring to simplify data structure and save space in local storage
 function simplifyData(data) {
   return data.map(item => {
     const { id, volumeInfo: { authors, title, subtitle, infoLink }} = item;
@@ -55,6 +40,7 @@ function simplifyData(data) {
   });
 }
 
+// Creates HTML from book data
 function createCard(bookData) {
   return `
     <li class="card-container shadow" id="${bookData.id}">
@@ -65,4 +51,17 @@ function createCard(bookData) {
       <a class="button bg-success" href="${bookData.infoLink}" target="_blank">Learn More</a>
     </li>
   `
+}
+
+// Generate HTML and sets #results's contents to it
+function render(bookData) {
+  let markup = new String();
+  bookData.forEach(book => markup += createCard(book));
+  document.getElementById("results").innerHTML = markup;
+}
+
+// Renders an error message
+function showError(msg) {
+  const html = `<li><p class="error">${msg}</p></li>`;
+  document.querySelector('#results').innerHTML = html;
 }
