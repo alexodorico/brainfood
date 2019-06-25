@@ -55,11 +55,14 @@ body {
   box-shadow: 0 1px 6px lighten($brand_primary, 70%);
 }
 
-.book-title {
+.bold {
   font-weight: 600;
 }
 
-.author {
-  font-family: 'PT-Sans';
+.bolder {
+  font-weight: 700;
+}
+
+.italic {
   font-style: italic;
 }
