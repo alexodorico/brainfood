@@ -35,6 +35,7 @@ function handleKeyUp(event) {
 // Search for books if user clicks search
 function handleSearch() {
   const query = getQuery();
+
   if (query.length) {
     return getBooks(query);
   }
@@ -61,6 +62,7 @@ function fetchData(query, endpoint) {
         .json()
         .then(data => {
           const simplifiedData = simplifyData(data.items);
+
           localStorage.setItem(endpoint, JSON.stringify(simplifiedData));
           manageHistory(query, data.totalItems);
           render(query, simplifiedData);
@@ -77,7 +79,6 @@ function fetchData(query, endpoint) {
 
 function manageHistory(query, totalItems) {
   const history = JSON.parse(localStorage.getItem("history")) || false;
-
   const historyItem = {
     query,
     totalItems
@@ -114,6 +115,7 @@ function viewHistoryItem(event) {
   if (event.target.classList.contains("history-item")) {
     const query = event.target.dataset.query;
     const endpoint = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
+
     return render(query, JSON.parse(localStorage.getItem(endpoint)));
   }
 }
@@ -152,14 +154,15 @@ function createCardMarkup(bookData) {
 function render(query, bookData) {
   const $results = document.getElementById("results");
   const totalItems = getTotalResults(query);
+
   $results.innerHTML = new String();
-  document.getElementById("results-count").innerHTML = `${totalItems} Results`;
+  document.getElementById("results-count").innerHTML = `${totalItems} results for <span class="text-bold">${query}</span>`;
   bookData.forEach(book => $results.insertAdjacentHTML("beforeend", createCardMarkup(book)));
   lazyLoadSetup();
 }
 
 function getTotalResults(query) {
-  let historyItems = JSON.parse(localStorage.getItem('history')) || false;
+  const historyItems = JSON.parse(localStorage.getItem('history')) || false;
 
   for (const item of historyItems) {
     if (item.query === query) {
