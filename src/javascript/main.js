@@ -1,8 +1,16 @@
-import '../scss/styles.scss';
 /*
   TODO
   make function for saving to local storage?
+  Search on "enter"
+  Error handling
+  Handle book that don't have all data
+  Add # of results
+  Add buttons for next/previous page
+  Implement favorites?
 */
+
+import '../scss/styles.scss';
+
 document.getElementById("search-btn").addEventListener("click", searchForBooks);
 document.getElementById("view-history").addEventListener("click", viewHistoryAll);
 document.getElementById("results-area").addEventListener("click", viewHistoryItem)
