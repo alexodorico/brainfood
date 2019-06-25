@@ -47,7 +47,7 @@ function createCard(bookData) {
       <h2 class="text-large text-bold">${bookData.title}</h2>
       <h3 class="text-medium text-normal">${bookData.subtitle}</h3>
       <h4 class="text-small text-darker text-bold">${bookData.authors}</h4>
-      <img class="cover-image" src="${bookData.thumbnail}">
+      <img class="cover-image lazy" data-src="${bookData.thumbnail}" height="190" width="129" src="https://via.placeholder.com/129x190">
       <a class="button bg-success" href="${bookData.infoLink}" target="_blank">Learn More</a>
     </li>
   `
@@ -55,9 +55,32 @@ function createCard(bookData) {
 
 // Generate HTML and sets #results's contents to it
 function render(bookData) {
-  let markup = new String();
-  bookData.forEach(book => markup += createCard(book));
-  document.getElementById("results").innerHTML = markup;
+  const $results = document.getElementById("results");
+  $results.innerHTML = new String();
+  bookData.forEach(book => $results.insertAdjacentHTML("beforeend", createCard(book)));
+  lazyLoadSetup();
+}
+
+function lazyLoadSetup() {
+  const lazyImages = document.querySelectorAll("img.lazy");
+
+  if ('IntersectionObserver' in window) {
+    const lazyImageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          console.log('is intersecting');
+          let lazyImage = entry.target;
+          lazyImage.src = lazyImage.dataset.src;
+          lazyImage.classList.remove('lazy');
+          lazyImageObserver.unobserve(lazyImage);
+        }
+      });
+    });
+
+    lazyImages.forEach(lazyImage => {
+      lazyImageObserver.observe(lazyImage);
+    });
+  }
 }
 
 // Renders an error message
