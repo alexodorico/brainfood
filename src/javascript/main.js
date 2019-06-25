@@ -200,6 +200,8 @@ function lazyLoadSetup() {
 
 // Renders an error message
 function showError(msg) {
-  const html = `<li><p class="text-danger">${msg}</p></li>`;
-  document.querySelector("#results").innerHTML = html;
+  document.getElementById("alert").innerHTML = msg;
+  document.getElementById("alert").classList.add("bg-danger");
+  fadeIn("alert");
+  setTimeout(_ => document.getElementById("alert").classList.remove("show"), 2000);
 }

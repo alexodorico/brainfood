@@ -103,3 +103,15 @@
   margin-top: 0;
 }
 
+#alert {
+  position: fixed;
+  bottom: 1vw;
+  left: 1vw;
+  width: 98vw;
+  text-align: center;
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.5s;
+  border-radius: 8px;
+}
+
