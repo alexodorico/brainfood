@@ -2,6 +2,10 @@
 @import 'fonts';
 @import 'variables';
 
+* {
+  box-sizing: border-box;
+}
+
 html {
   font-size: 16px;
   font-family: 'Nunito', Helvetica, sans-serif;
@@ -19,6 +23,10 @@ h3,
 h4 {
   margin-top: 0;
   margin-bottom: 0.33rem;
+}
+
+ul {
+  padding-left: 0;
 }
 
 li {
@@ -107,4 +115,5 @@ li {
 
 .card-container {
   padding: 0.9375rem;
+  margin-bottom: 0.9375rem;
 }
