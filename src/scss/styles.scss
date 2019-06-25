@@ -1,15 +1,51 @@
 @import '../../node_modules/normalize.css/normalize.css';
 
-.error {
-  color: red;
+@font-face {
+  font-family: Nunito;
+  src: url('../fonts/Nunito-Regular.ttf') format('truetype');
 }
 
-.tset {
-  color: blue;
+@font-face {
+  font-family: Nunito;
+  src: url('../fonts/Nunito-Bold.ttf') format('truetype');
+  font-weight: 600;
 }
 
-$red: #fefefe;
+@font-face {
+  font-family: Nunito;
+  src: url('../fonts/Nunito-Black.ttf') format('truetype');
+  font-weight: 700;
+}
 
-body {
-  color: $red;
+@font-face {
+  font-family: 'PT-Sans';
+  src: url('../fonts/PT_Sans-Web-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'PT-Sans';
+  src: url('../fonts/PT_Sans-Web-BoldItalic.ttf') format('truetype');
+  font-style: italic;
+}
+
+$brand_light: rgba(229, 229, 229, 1);
+$brand_dark: rgba(54, 54, 54, 1);
+$brand_primary: rgba(145, 173, 194, 1);
+$brand_success: rgba(95, 187, 151, 1);
+$brand_error: rgba(142, 74, 73, 1);
+
+html {
+  font-size: 16px;
+}
+
+.title {
+  font-family: 'Nunito', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.author {
+  font-family: 'PT-Sans';
+  font-style: italic;
+  font-size: 0.75rem;
 }
