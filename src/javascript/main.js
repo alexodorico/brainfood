@@ -4,7 +4,8 @@ import '../scss/styles.scss';
   make function for saving to local storage?
 */
 document.getElementById("search-btn").addEventListener("click", searchForBooks);
-document.getElementById("view-history").addEventListener("click", viewHistory);
+document.getElementById("view-history").addEventListener("click", viewHistoryAll);
+document.getElementById("results-area").addEventListener("click", viewHistoryItem)
 
 // Searches for books and returns a promise that resolves a JSON list
 function searchForBooks() {
@@ -40,7 +41,7 @@ function manageHistory(query) {
   }
 }
 
-function viewHistory() {
+function viewHistoryAll() {
   const $results = document.getElementById("results");
   const history = JSON.parse(localStorage.getItem('history')) || false;
 
@@ -50,11 +51,20 @@ function viewHistory() {
 
 function createHistoryMarkup(query) {
   return `
-    <h1>${query}</h1>
+    <h1 class="history-item" data-query="${query}">${query}</h1>
   `
 }
 
-// Uses object destructuring to simplify data structure and save space in local storage
+// This is repetitive... fix later
+function viewHistoryItem(event) {
+  if (event.target.classList.contains("history-item")) {
+    const query = event.target.dataset.query;
+    const endpoint = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
+    return render(JSON.parse(localStorage.getItem(endpoint)));
+  }
+}
+
+// Simplify data structure and save space in local storage
 function simplifyData(data) {
   return data.map(item => {
     const { id, volumeInfo: { authors, title, subtitle, infoLink }} = item;
