@@ -49,24 +49,23 @@ function getBooks(query) {
   const endpoint = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
   const cachedResults = localStorage.getItem(endpoint) || false;
 
-  manageHistory(query);
-
   if (cachedResults) {
-    return render(JSON.parse(cachedResults));
+    return render(query, JSON.parse(cachedResults));
   }
 
-  return fetchData(endpoint);
+  return fetchData(query, endpoint);
 }
 
-function fetchData(endpoint) {
+function fetchData(query, endpoint) {
   return fetch(endpoint).then(response => {
     if (response.status === 200) {
       response
         .json()
         .then(data => {
           const simplifiedData = simplifyData(data.items);
-          render(simplifiedData);
           localStorage.setItem(endpoint, JSON.stringify(simplifiedData));
+          manageHistory(query, data.totalItems);
+          render(query, simplifiedData);
         })
         .catch(_ => {
           showError("Oops. Something went wrong, mind trying again in a sec?");
@@ -78,14 +77,19 @@ function fetchData(endpoint) {
 }
 
 
-function manageHistory(query) {
+function manageHistory(query, totalItems) {
   const history = JSON.parse(localStorage.getItem("history")) || false;
 
+  const historyItem = {
+    query,
+    totalItems
+  }
+
   if (history) {
-    history.unshift(query);
+    history.unshift(historyItem);
     localStorage.setItem("history", JSON.stringify(history));
   } else {
-    localStorage.setItem("history", JSON.stringify(new Array(query)));
+    localStorage.setItem("history", JSON.stringify(new Array(historyItem)));
   }
 }
 
@@ -95,7 +99,7 @@ function viewHistoryAll() {
 
   $results.innerHTML = new String();
   if (history) {
-    return history.forEach(query => $results.insertAdjacentHTML("beforeend", createHistoryMarkup(query)));
+    return history.forEach(historyItem => $results.insertAdjacentHTML("beforeend", createHistoryMarkup(historyItem.query)));
   }
 
   return $results.insertAdjacentHTML("beforeend", "<li><p class='text-primary'>Looks like you either haven't made any searches yet, or your browsing history was recently cleared!</p></li>");
@@ -112,7 +116,7 @@ function viewHistoryItem(event) {
   if (event.target.classList.contains("history-item")) {
     const query = event.target.dataset.query;
     const endpoint = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
-    return render(JSON.parse(localStorage.getItem(endpoint)));
+    return render(query, JSON.parse(localStorage.getItem(endpoint)));
   }
 }
 
@@ -147,11 +151,23 @@ function createCardMarkup(bookData) {
 }
 
 // Generate HTML and sets #results's contents to it
-function render(bookData) {
+function render(query, bookData) {
   const $results = document.getElementById("results");
+  const totalItems = getTotalResults(query);
+
   $results.innerHTML = new String();
   bookData.forEach(book => $results.insertAdjacentHTML("beforeend", createCardMarkup(book)));
   lazyLoadSetup();
+}
+
+function getTotalResults(query) {
+  let historyItems = JSON.parse(localStorage.getItem('history')) || false;
+
+  for (const item of historyItems) {
+    if (item.query === query) {
+      return item.totalItems;
+    }
+  }
 }
 
 function lazyLoadSetup() {
