@@ -10,10 +10,16 @@
 
 import "../scss/styles.scss";
 
-document.getElementById("search-btn").addEventListener("click", handleSearch);
+window.onload = fadeIn("results-area");
+
+document.getElementById("search-button").addEventListener("click", handleSearch);
 document.getElementById("search-bar").addEventListener("keyup", handleKeyUp);
 document.getElementById("view-history").addEventListener("click", viewHistoryAll);
 document.getElementById("results-area").addEventListener("click", viewHistoryItem);
+
+function fadeIn(element) {
+  document.getElementById(element).classList.add("show");
+}
 
 // Get value of search bar
 function getQuery() {

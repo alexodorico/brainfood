@@ -6,6 +6,10 @@
   color: $brand_darker;
 }
 
+.text-darkest {
+  color: $brand_darkest;
+}
+
 .text-primary {
   color: $brand_primary;
 }
@@ -51,7 +55,7 @@
 }
 
 .shadow {
-  box-shadow: 0 1px 6px lighten($brand_primary, 70%);
+  box-shadow: 0 1px 6px rgba(145, 173, 194, 0.33);
 }
 
 .text-bold {

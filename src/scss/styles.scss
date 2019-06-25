@@ -7,6 +7,7 @@
 .card-container {
   padding: 0.9375rem;
   margin-bottom: 0.9375rem;
+  border-radius: 8px;
 }
 
 .button {
@@ -16,3 +17,89 @@
   border-radius: 8px;
   height: 39px;
 }
+
+#book-icon {
+  height: 30px;
+  width: 30px;
+  fill: $brand_primary;
+  margin: .1rem .5rem;
+}
+
+#search-button {
+  background-color: transparent;
+  padding: 0;
+  border: 0;
+  position: relative;
+  float: right;
+  top: -30px;
+  right: 15px;
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+#search-area {
+  margin-top: 0.5rem;
+}
+
+#search-icon {
+  height: 20px;
+  width: 20px;
+  fill: $brand_darkest;
+}
+
+#search-bar {
+  width: 100%;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(151, 151, 151, 0.33);
+  padding-left: 0.8rem;
+
+  &:focus {
+    outline: 0;
+    border: 1px solid $brand_primary;
+  }
+}
+
+#view-history {
+  text-decoration: underline;
+  text-align: right;
+  color: $brand_dark;
+  padding-top: 0.5rem;
+}
+
+.flex-parent {
+  display: flex;
+  flex-direction: row;
+}
+
+#results-count {
+  padding: 0.5rem;
+}
+
+#results-area {
+  opacity: 0;
+  transition: opacity 1.75s;
+}
+
+.init-text {
+  text-align: center;
+  padding: 1rem 4rem 0;
+  line-height: 1.56;
+}
+
+.show {
+  opacity: 1 !important;
+}
+
+#view-history:hover,
+#search-icon:hover,
+.history-item:hover {
+  cursor: pointer;
+}
+
+#results {
+  margin-top: 0;
+}
+
