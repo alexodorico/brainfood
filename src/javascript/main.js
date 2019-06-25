@@ -28,18 +28,38 @@ document.getElementById("search-btn").addEventListener("click", _ => {
   return fetch(endpoint).then(response => {
     if (response.status === 200) {
       response.json().then(data => {
-        console.log(data);
-        destructureResults(data.items);
-        localStorage.setItem(endpoint, JSON.stringify(data));
+        const slimData = destructureResults(data.items);
+        console.log(slimData);
+        localStorage.setItem(endpoint, JSON.stringify(slimData));
       });
     }
   });
 });
 
 function destructureResults(data) {
-  // title, subtitle, authors, id, link, image
-  data.forEach(item => {
-    const { id, volumeInfo: { authors, title, subtitle, infoLink, imageLinks: { thumbnail }}} = item;
-    console.log(`ID: ${id}, authors: ${authors}, title: ${title}, subtitle: ${subtitle}, link: ${infoLink}, imagelink: ${thumbnail}`);
+  return data.map(item => {
+    const { id, volumeInfo: { authors, title, subtitle, infoLink }} = item;
+    const { volumeInfo: { imageLinks: { thumbnail } = { thumbnail: false }}} = item;
+
+    return {
+      id,
+      title,
+      subtitle,
+      authors,
+      infoLink,
+      thumbnail
+    }
   });
+}
+
+function createCard(bookData) {
+  return `
+    <li class="card-container shadow" id="${bookData.id}">
+      <h2 class="text-large text-bold">${bookData.title}</h2>
+      <h3 class="text-medium text-normal">${bookData.subtitle}</h3>
+      <h4 class="text-small text-darker text-bold">${bookData.authors}</h4>
+      <img class="cover-image" src="${bookData.thumbnail}">
+      <a class="button bg-success" href="${bookData.infoLink}" target="_blank">Learn More</a>
+    </li>
+  `
 }
