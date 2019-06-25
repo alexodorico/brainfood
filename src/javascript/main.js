@@ -1,7 +1,6 @@
 /*
   TODO
   make function for saving to local storage?
-  Search on "enter"
   Error handling
   Handle book that don't have all data
   Add # of results
@@ -9,15 +8,44 @@
   Implement favorites?
 */
 
-import '../scss/styles.scss';
+import "../scss/styles.scss";
 
-document.getElementById("search-btn").addEventListener("click", searchForBooks);
+document.getElementById("search-btn").addEventListener("click", handleSearch);
+document.getElementById("search-bar").addEventListener("keyup", handleKeyUp);
 document.getElementById("view-history").addEventListener("click", viewHistoryAll);
-document.getElementById("results-area").addEventListener("click", viewHistoryItem)
+document.getElementById("results-area").addEventListener("click", viewHistoryItem);
 
-// Searches for books and returns a promise that resolves a JSON list
-function searchForBooks() {
-  const query = document.getElementById("search-bar").value;
+// Get value of search bar
+function getQuery() {
+  return document.getElementById("search-bar").value;
+}
+
+// Searches for books if user hits enter
+// Fix this, there's a better way
+function handleKeyUp(event) {
+  const query = getQuery();
+
+  if (event.keyCode === 13 && query.length) {
+    return getBooks(query);
+  } else if (event.keyCode === 13) {
+    return showError("Oops! Can't search for nothing.");
+  }
+
+  return
+}
+
+// Search for books if user clicks search
+function handleSearch() {
+  const query = getQuery();
+  if (query.length) {
+    return getBooks(query);
+  }
+
+  return showError("Oops! Can't search for nothing.")
+}
+
+// Checks local storage for results. If none, make fetch data 
+function getBooks(query) {
   const endpoint = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
   const cachedResults = localStorage.getItem(endpoint) || false;
 
@@ -27,31 +55,43 @@ function searchForBooks() {
     return render(JSON.parse(cachedResults));
   }
 
+  return fetchData(endpoint);
+}
+
+function fetchData(endpoint) {
   return fetch(endpoint).then(response => {
     if (response.status === 200) {
-      response.json().then(data => {
+      response
+        .json()
+        .then(data => {
         const simplifiedData = simplifyData(data.items);
         render(simplifiedData);
         localStorage.setItem(endpoint, JSON.stringify(simplifiedData));
-      });
+        })
+        .catch(_ => {
+          showError("Oops. Something went wrong, mind trying again in a sec?");
+        });
+    } else {
+      showError("Oops. Something went wrong, mind trying again in a sec?");
     }
   });
 }
 
+
 function manageHistory(query) {
-  const history = JSON.parse(localStorage.getItem('history')) || false;
+  const history = JSON.parse(localStorage.getItem("history")) || false;
 
   if (history) {
     history.unshift(query);
-    localStorage.setItem('history', JSON.stringify(history));
+    localStorage.setItem("history", JSON.stringify(history));
   } else {
-    localStorage.setItem('history', JSON.stringify(new Array(query)));
+    localStorage.setItem("history", JSON.stringify(new Array(query)));
   }
 }
 
 function viewHistoryAll() {
   const $results = document.getElementById("results");
-  const history = JSON.parse(localStorage.getItem('history')) || false;
+  const history = JSON.parse(localStorage.getItem("history")) || false;
 
   $results.innerHTML = new String();
   history.forEach(query => $results.insertAdjacentHTML("beforeend", createHistoryMarkup(query)));
@@ -113,14 +153,13 @@ function render(bookData) {
 function lazyLoadSetup() {
   const lazyImages = document.querySelectorAll("img.lazy");
 
-  if ('IntersectionObserver' in window) {
+  if ("IntersectionObserver" in window) {
     const lazyImageObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          console.log('is intersecting');
           let lazyImage = entry.target;
           lazyImage.src = lazyImage.dataset.src;
-          lazyImage.classList.remove('lazy');
+          lazyImage.classList.remove("lazy");
           lazyImageObserver.unobserve(lazyImage);
         }
       });
@@ -134,6 +173,6 @@ function lazyLoadSetup() {
 
 // Renders an error message
 function showError(msg) {
-  const html = `<li><p class="error">${msg}</p></li>`;
-  document.querySelector('#results').innerHTML = html;
+  const html = `<li><p class="text-danger">${msg}</p></li>`;
+  document.querySelector("#results").innerHTML = html;
 }
