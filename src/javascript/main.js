@@ -30,8 +30,6 @@ function handleKeyUp(event) {
   } else if (event.keyCode === 13) {
     return showError("Oops! Can't search for nothing.");
   }
-
-  return
 }
 
 // Search for books if user clicks search
@@ -154,8 +152,8 @@ function createCardMarkup(bookData) {
 function render(query, bookData) {
   const $results = document.getElementById("results");
   const totalItems = getTotalResults(query);
-
   $results.innerHTML = new String();
+  document.getElementById("results-count").innerHTML = `${totalItems} Results`;
   bookData.forEach(book => $results.insertAdjacentHTML("beforeend", createCardMarkup(book)));
   lazyLoadSetup();
 }
