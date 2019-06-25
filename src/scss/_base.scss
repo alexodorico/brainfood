@@ -1,0 +1,30 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  html {
+    font-size: 16px;
+    font-family: 'Nunito', Helvetica, sans-serif;
+  }
+  
+  body {
+    background-color: $brand_light;
+    color: $brand_darkest;
+    padding: 0.625rem;
+  }
+  
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin-top: 0;
+    margin-bottom: 0.33rem;
+  }
+  
+  ul {
+    padding-left: 0;
+  }
+  
+  li {
+    list-style: none;
+  }
