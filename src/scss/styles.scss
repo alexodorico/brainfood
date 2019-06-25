@@ -1,51 +1,65 @@
 @import '../../node_modules/normalize.css/normalize.css';
-
-@font-face {
-  font-family: Nunito;
-  src: url('../fonts/Nunito-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: Nunito;
-  src: url('../fonts/Nunito-Bold.ttf') format('truetype');
-  font-weight: 600;
-}
-
-@font-face {
-  font-family: Nunito;
-  src: url('../fonts/Nunito-Black.ttf') format('truetype');
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: 'PT-Sans';
-  src: url('../fonts/PT_Sans-Web-Bold.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'PT-Sans';
-  src: url('../fonts/PT_Sans-Web-BoldItalic.ttf') format('truetype');
-  font-style: italic;
-}
-
-$brand_light: rgba(229, 229, 229, 1);
-$brand_dark: rgba(54, 54, 54, 1);
-$brand_primary: rgba(145, 173, 194, 1);
-$brand_success: rgba(95, 187, 151, 1);
-$brand_error: rgba(142, 74, 73, 1);
+@import 'fonts';
+@import 'variables';
 
 html {
   font-size: 16px;
+  font-family: 'Nunito', Helvetica, sans-serif;
 }
 
-.title {
-  font-family: 'Nunito', Helvetica, sans-serif;
-  font-weight: 600;
+body {
+  background-color: $brand_light;
+  color: $brand_dark;
+}
+
+.text-primary {
+  color: $brand_primary;
+}
+
+.text-success {
+  color: $brand_success;
+}
+
+.text-danger {
+  color: $brand_danger;
+}
+
+.text-xlarge {
+  font-size: 1.5rem;
+}
+
+.text-large {
   font-size: 1.25rem;
+}
+
+.text-medium {
+  font-size: 0.875rem;
+}
+
+.text-small {
+  font-size: 0.75rem;
+}
+
+.text-xsmall {
+  font-size: 0.625rem;
+}
+
+.button {
+  font-family: 'PT-Sans';
+  color: rgba(255, 255, 255, 0.9);
+  border: 0;
+  border-radius: 8px;
+}
+
+.shadow {
+  box-shadow: 0 1px 6px lighten($brand_primary, 70%);
+}
+
+.book-title {
+  font-weight: 600;
 }
 
 .author {
   font-family: 'PT-Sans';
   font-style: italic;
-  font-size: 0.75rem;
 }
