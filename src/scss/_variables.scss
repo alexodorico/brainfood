@@ -1,0 +1,7 @@
+$brand_light: rgba(229, 229, 229, 1);
+$brand_darkest: rgba(54, 54, 54, 1);
+$brand_darker: lighten($brand_darkest, 25%);
+$brand_dark: lighten($brand_darkest, 33.3%);
+$brand_primary: rgba(145, 173, 194, 1);
+$brand_success: rgba(95, 187, 151, 1);
+$brand_danger: rgba(142, 74, 73, 1);

@@ -1,20 +1,25 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="Search for your next book" />
     <title>Google Books Search Engine</title>
-    <!-- fetch polyfill if your browser doesn't support fetch -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js"></script> -->
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js"></script>
+    <link href=dist/bundle.css rel=preload as=style>
+    <link href=dist/main.js rel=preload as=script>
+    <link rel="stylesheet" href="dist/bundle.css">
   </head>
   <body>
+    <h1 class="site-title text-primary">BRAINFOOD</h1>
     <div id="search-area">
-      <input id="search-bar" type="text" placeholder="Input search term here">
-      <button id="search-btn">Search</button>
+      <input id="search-bar" type="text" placeholder="Let's find a book!">
+      <button class="button bg-success" id="search-btn">Search</button>
     </div>
     <div id="results-area">
       <ul id="results"></ul>
     </div>
-    <script src="main.js"></script>
-    <!-- for babel transpilation -->
-    <!-- <script src="main.min.js"></script> -->
+    <script src="dist/main.js"></script>
   </body>
 </html>

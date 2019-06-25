@@ -1,0 +1,110 @@
+@import '../../node_modules/normalize.css/normalize.css';
+@import 'fonts';
+@import 'variables';
+
+html {
+  font-size: 16px;
+  font-family: 'Nunito', Helvetica, sans-serif;
+}
+
+body {
+  background-color: $brand_light;
+  color: $brand_darkest;
+  padding: 0.625rem;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin-top: 0;
+  margin-bottom: 0.33rem;
+}
+
+li {
+  list-style: none;
+}
+
+.text-dark {
+  color: $brand_dark;
+}
+
+.text-darker {
+  color: $brand_darker;
+}
+
+.text-primary {
+  color: $brand_primary;
+}
+
+.bg-primary {
+  background-color: $brand_primary;
+}
+
+.text-success {
+  color: $brand_success;
+}
+
+.bg-success {
+  background-color: $brand_success;
+}
+
+.text-danger {
+  color: $brand_danger;
+}
+
+.bg-danger {
+  background-color: $brand_danger;
+}
+
+.text-xlarge {
+  font-size: 1.5rem;
+}
+
+.text-large {
+  font-size: 1.25rem;
+}
+
+.text-medium {
+  font-size: 0.875rem;
+}
+
+.text-small {
+  font-size: 0.75rem;
+}
+
+.text-xsmall {
+  font-size: 0.625rem;
+}
+
+.button {
+  font-family: 'PT-Sans';
+  color: rgba(255, 255, 255, 0.9);
+  border: 0;
+  border-radius: 8px;
+  height: 39px;
+}
+
+.shadow {
+  box-shadow: 0 1px 6px lighten($brand_primary, 70%);
+}
+
+.text-bold {
+  font-weight: 600;
+}
+
+.text-bolder {
+  font-weight: 700;
+}
+
+.text-normal {
+  font-weight: 400;
+}
+
+.text-italic {
+  font-style: italic;
+}
+
+.card-container {
+  padding: 0.9375rem;
+}
