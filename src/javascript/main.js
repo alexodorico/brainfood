@@ -1,12 +1,18 @@
 import '../scss/styles.scss';
-
+/*
+  TODO
+  make function for saving to local storage?
+*/
 document.getElementById("search-btn").addEventListener("click", searchForBooks);
+document.getElementById("view-history").addEventListener("click", viewHistory);
 
 // Searches for books and returns a promise that resolves a JSON list
 function searchForBooks() {
   const query = document.getElementById("search-bar").value;
   const endpoint = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
   const cachedResults = localStorage.getItem(endpoint) || false;
+
+  manageHistory(query);
 
   if (cachedResults) {
     return render(JSON.parse(cachedResults));
@@ -21,6 +27,31 @@ function searchForBooks() {
       });
     }
   });
+}
+
+function manageHistory(query) {
+  const history = JSON.parse(localStorage.getItem('history')) || false;
+
+  if (history) {
+    history.unshift(query);
+    localStorage.setItem('history', JSON.stringify(history));
+  } else {
+    localStorage.setItem('history', JSON.stringify(new Array(query)));
+  }
+}
+
+function viewHistory() {
+  const $results = document.getElementById("results");
+  const history = JSON.parse(localStorage.getItem('history')) || false;
+
+  $results.innerHTML = new String();
+  history.forEach(query => $results.insertAdjacentHTML("beforeend", createHistoryMarkup(query)));
+}
+
+function createHistoryMarkup(query) {
+  return `
+    <h1>${query}</h1>
+  `
 }
 
 // Uses object destructuring to simplify data structure and save space in local storage
@@ -41,7 +72,7 @@ function simplifyData(data) {
 }
 
 // Creates HTML from book data
-function createCard(bookData) {
+function createCardMarkup(bookData) {
   return `
     <li class="card-container shadow" id="${bookData.id}">
       <h2 class="text-large text-bold">${bookData.title}</h2>
@@ -57,7 +88,7 @@ function createCard(bookData) {
 function render(bookData) {
   const $results = document.getElementById("results");
   $results.innerHTML = new String();
-  bookData.forEach(book => $results.insertAdjacentHTML("beforeend", createCard(book)));
+  bookData.forEach(book => $results.insertAdjacentHTML("beforeend", createCardMarkup(book)));
   lazyLoadSetup();
 }
 
