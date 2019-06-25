@@ -12,31 +12,34 @@ function searchForBooks(term) {
 }
 
 // Generate HTML and sets #results's contents to it
-function render() {
-  // TODO
+function render(bookData) {
+  let markup = new String();
+  bookData.forEach(book => markup += createCard(book));
+  document.getElementById("results").innerHTML = markup;
 }
 
 document.getElementById("search-btn").addEventListener("click", _ => {
   const query = document.getElementById("search-bar").value;
   const endpoint = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
-  const cached = localStorage.getItem(endpoint) || false;
+  const cachedResults = localStorage.getItem(endpoint) || false;
 
-  if (cached) {
-    console.log('cached');
+  if (cachedResults) {
+    console.log('cachedResults');
+    return render(JSON.parse(cachedResults));
   }
 
   return fetch(endpoint).then(response => {
     if (response.status === 200) {
       response.json().then(data => {
-        const slimData = destructureResults(data.items);
-        console.log(slimData);
-        localStorage.setItem(endpoint, JSON.stringify(slimData));
+        const simplifiedData = simplifyData(data.items);
+        render(simplifiedData);
+        localStorage.setItem(endpoint, JSON.stringify(simplifiedData));
       });
     }
   });
 });
 
-function destructureResults(data) {
+function simplifyData(data) {
   return data.map(item => {
     const { id, volumeInfo: { authors, title, subtitle, infoLink }} = item;
     const { volumeInfo: { imageLinks: { thumbnail } = { thumbnail: false }}} = item;
