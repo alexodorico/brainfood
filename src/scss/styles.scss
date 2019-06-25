@@ -85,8 +85,14 @@
 
 .init-text {
   text-align: center;
-  padding: 1rem 4rem 0;
+  padding: 1rem 2rem 0;
   line-height: 1.56;
+  font-size: 1rem;
+
+  @media (min-width: 750px) {
+    padding: 1rem 4rem;
+    font-size: 1.75rem;
+  }
 }
 
 .show {
@@ -97,6 +103,10 @@
 #search-icon:hover,
 .history-item:hover {
   cursor: pointer;
+}
+
+.hide {
+  display: none;
 }
 
 #results {

@@ -17,10 +17,6 @@ document.getElementById("search-bar").addEventListener("keyup", handleKeyUp);
 document.getElementById("view-history").addEventListener("click", viewHistoryAll);
 document.getElementById("results-area").addEventListener("click", viewHistoryItem);
 
-function fadeIn(element) {
-  document.getElementById(element).classList.add("show");
-}
-
 // Get value of search bar
 function getQuery() {
   return document.getElementById("search-bar").value;
@@ -146,12 +142,12 @@ function simplifyData(data) {
 // Creates HTML from book data
 function createCardMarkup(bookData) {
   return `
-    <li class="card-container shadow" id="${bookData.id}">
-      <h2 class="text-large text-bold">${bookData.title}</h2>
-      <h3 class="text-medium text-normal">${bookData.subtitle}</h3>
-      <h4 class="text-small text-darker text-bold">${bookData.authors}</h4>
-      <img class="cover-image lazy" data-src="${bookData.thumbnail}" height="190" width="129" src="https://via.placeholder.com/129x190">
-      <a class="button bg-success" href="${bookData.infoLink}" target="_blank">Learn More</a>
+    <li class="card-container shadow ${bookData.id || "hide"}" id="${bookData.id}">
+      <h2 class="text-large text-bold ${bookData.title || "hide"}">${bookData.title}</h2>
+      <h3 class="text-medium text-normal ${bookData.subtitle || "hide"}">${bookData.subtitle}</h3>
+      <h4 class="text-small text-darker text-bold ${bookData.authors || "hide"}">${bookData.authors}</h4>
+      <img class="cover-image lazy ${bookData.thumbnail || "hide"}" data-src="${bookData.thumbnail}" height="190" width="129" src="https://via.placeholder.com/129x190">
+      <a class="button bg-success ${bookData.infoLink || "hide"}" href="${bookData.infoLink}" target="_blank">Learn More</a>
     </li>
   `
 }
@@ -196,6 +192,10 @@ function lazyLoadSetup() {
       lazyImageObserver.observe(lazyImage);
     });
   }
+}
+
+function fadeIn(element) {
+  document.getElementById(element).classList.add("show");
 }
 
 // Renders an error message
