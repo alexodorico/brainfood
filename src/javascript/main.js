@@ -64,9 +64,9 @@ function fetchData(endpoint) {
       response
         .json()
         .then(data => {
-        const simplifiedData = simplifyData(data.items);
-        render(simplifiedData);
-        localStorage.setItem(endpoint, JSON.stringify(simplifiedData));
+          const simplifiedData = simplifyData(data.items);
+          render(simplifiedData);
+          localStorage.setItem(endpoint, JSON.stringify(simplifiedData));
         })
         .catch(_ => {
           showError("Oops. Something went wrong, mind trying again in a sec?");
@@ -94,7 +94,11 @@ function viewHistoryAll() {
   const history = JSON.parse(localStorage.getItem("history")) || false;
 
   $results.innerHTML = new String();
-  history.forEach(query => $results.insertAdjacentHTML("beforeend", createHistoryMarkup(query)));
+  if (history) {
+    return history.forEach(query => $results.insertAdjacentHTML("beforeend", createHistoryMarkup(query)));
+  }
+
+  return $results.insertAdjacentHTML("beforeend", "<li><p class='text-primary'>Looks like you either haven't made any searches yet, or your browsing history was recently cleared!</p></li>");
 }
 
 function createHistoryMarkup(query) {
