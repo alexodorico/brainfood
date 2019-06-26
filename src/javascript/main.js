@@ -3,6 +3,16 @@ import "../scss/styles.scss";
 (_=> {
   window.onload = fadeIn("results-area");
 
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("../../serviceworker.js")
+      .then(registration => {
+        console.log("Service worker registration successful:", registration.scope);
+      })
+      .catch(error => {
+        console.log("Service worker registration failed: ", error);
+      });
+  }
+
   document.getElementById("search-button").addEventListener("click", handleSearch);
   document.getElementById("search-bar").addEventListener("keyup", handleKeyUp);
   document.getElementById("view-history").addEventListener("click", viewHistoryAll);
