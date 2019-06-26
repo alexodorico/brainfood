@@ -1,19 +1,13 @@
-/*
-  TODO
-  make function for saving to local storage?
-  Add # of results
-  Add buttons for next/previous page
-  Implement favorites?
-*/
-
 import "../scss/styles.scss";
 
-window.onload = fadeIn("results-area");
+(_=> {
+  window.onload = fadeIn("results-area");
 
-document.getElementById("search-button").addEventListener("click", handleSearch);
-document.getElementById("search-bar").addEventListener("keyup", handleKeyUp);
-document.getElementById("view-history").addEventListener("click", viewHistoryAll);
-document.getElementById("results-area").addEventListener("click", viewHistoryItem);
+  document.getElementById("search-button").addEventListener("click", handleSearch);
+  document.getElementById("search-bar").addEventListener("keyup", handleKeyUp);
+  document.getElementById("view-history").addEventListener("click", viewHistoryAll);
+  document.getElementById("results-area").addEventListener("click", viewHistoryItem);
+})();
 
 // Get value of search bar
 function getQuery() {
@@ -31,7 +25,7 @@ function handleKeyUp(event) {
   }
 }
 
-// Search for books if user clicks search
+// Search for books if user clicks search icon
 function handleSearch() {
   const query = getQuery();
 
@@ -42,7 +36,7 @@ function handleSearch() {
   return showError("Oops! Can't search for nothing.");
 }
 
-// Checks local storage for results. If none, fetch data 
+// Checks local storage for results. If none, fetchs data 
 function getBooks(query, offset = 0) {
   const endpoint = `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${offset}`;
   const cachedResults = localStorage.getItem(endpoint) || false;
@@ -74,6 +68,36 @@ function fetchData(query, endpoint, offset = 0) {
   });
 }
 
+// Simplify data structure and save space in local storage
+function simplifyData(data) {
+  return data.map(item => {
+    const { id, volumeInfo: { authors, title, subtitle, infoLink }} = item;
+    const { volumeInfo: { imageLinks: { thumbnail } = { thumbnail: false }}} = item;
+
+    return {
+      id,
+      title,
+      subtitle,
+      authors,
+      infoLink,
+      thumbnail
+    }
+  });
+}
+
+// Generates HTML for buttons, cards, and result count
+function render(query, bookData, offset = 0) {
+  const $results = document.getElementById("results");
+  const totalItems = getTotalResults(query);
+
+  $results.innerHTML = new String();
+  document.getElementById("results-count").innerHTML = `${totalItems} results for <span class="text-bold">${query}</span>`;
+  bookData.forEach(book => $results.insertAdjacentHTML("beforeend", createCardMarkup(book)));
+  buttonSetup(query, offset);
+  lazyLoadSetup();
+}
+
+// Updates history in local storage. If there's no history, creates history
 function manageHistory(query, totalItems, offset = 0) {
 
   // If there's an offset, no need to add duplicate entry in history
@@ -93,6 +117,7 @@ function manageHistory(query, totalItems, offset = 0) {
   }
 }
 
+// Handles "View Search History" click
 function viewHistoryAll() {
   const $results = document.getElementById("results");
   const history = JSON.parse(localStorage.getItem("history")) || false;
@@ -106,13 +131,7 @@ function viewHistoryAll() {
   return $results.insertAdjacentHTML("beforeend", "<li><p class='text-primary'>Looks like you either haven't made any searches yet, or your browsing history was recently cleared!</p></li>");
 }
 
-function createHistoryMarkup(query) {
-  return `
-    <h1 class="history-item" data-query="${query}">${query}</h1>
-  `
-}
-
-// This is repetitive... fix later
+// Handles history item click
 function viewHistoryItem(event) {
   if (event.target.classList.contains("history-item")) {
     const query = event.target.dataset.query;
@@ -122,46 +141,22 @@ function viewHistoryItem(event) {
   }
 }
 
-// Simplify data structure and save space in local storage
-function simplifyData(data) {
-  return data.map(item => {
-    const { id, volumeInfo: { authors, title, subtitle, infoLink }} = item;
-    const { volumeInfo: { imageLinks: { thumbnail } = { thumbnail: false }}} = item;
+// Handler for next/previous button clicks
+function changePage(event) {
+  const query = event.target.dataset.query;
+  const offset = event.target.dataset.offset;
+  getBooks(query, offset);
+  document.body.scrollTop = document.documentElement.scrollTop = 0;
+}
 
-    return {
-      id,
-      title,
-      subtitle,
-      authors,
-      infoLink,
-      thumbnail
+function getTotalResults(query) {
+  const historyItems = JSON.parse(localStorage.getItem('history')) || false;
+
+  for (const item of historyItems) {
+    if (item.query === query) {
+      return item.totalItems;
     }
-  });
-}
-
-// Creates HTML from book data
-function createCardMarkup(bookData) {
-  return `
-    <li class="card-container shadow ${bookData.id || "hide"}" id="${bookData.id}">
-      <h2 class="text-large text-bold ${bookData.title || "hide"}">${bookData.title}</h2>
-      <h3 class="text-medium text-normal ${bookData.subtitle || "hide"}">${bookData.subtitle}</h3>
-      <h4 class="text-small text-darker text-bold ${bookData.authors || "hide"}">${bookData.authors}</h4>
-      <img class="cover-image lazy ${bookData.thumbnail || "hide"}" data-src="${bookData.thumbnail}" height="190" width="129" src="https://via.placeholder.com/129x190">
-      <a class="button bg-success ${bookData.infoLink || "hide"}" href="${bookData.infoLink}" target="_blank">Learn More</a>
-    </li>
-  `
-}
-
-// Generate HTML and sets #results's contents to it
-function render(query, bookData, offset = 0) {
-  const $results = document.getElementById("results");
-  const totalItems = getTotalResults(query);
-
-  $results.innerHTML = new String();
-  document.getElementById("results-count").innerHTML = `${totalItems} results for <span class="text-bold">${query}</span>`;
-  bookData.forEach(book => $results.insertAdjacentHTML("beforeend", createCardMarkup(book)));
-  buttonSetup(query, offset);
-  lazyLoadSetup();
+  }
 }
 
 function buttonSetup(query, offset) {
@@ -179,21 +174,23 @@ function buttonSetup(query, offset) {
   }
 }
 
-function changePage(event) {
-  const query = event.target.dataset.query;
-  const offset = event.target.dataset.offset;
-  getBooks(query, offset);
-  document.body.scrollTop = document.documentElement.scrollTop = 0;
+// Creates HTML from book data
+function createCardMarkup(bookData) {
+  return `
+    <li class="card-container shadow ${bookData.id || "hide"}" id="${bookData.id}">
+      <h2 class="text-large text-bold ${bookData.title || "hide"}">${bookData.title}</h2>
+      <h3 class="text-medium text-normal ${bookData.subtitle || "hide"}">${bookData.subtitle}</h3>
+      <h4 class="text-small text-darker text-bold ${bookData.authors || "hide"}">${bookData.authors}</h4>
+      <img class="cover-image lazy ${bookData.thumbnail || "hide"}" data-src="${bookData.thumbnail}" height="190" width="129" src="https://via.placeholder.com/129x190">
+      <a class="button bg-success ${bookData.infoLink || "hide"}" href="${bookData.infoLink}" target="_blank">Learn More</a>
+    </li>
+  `
 }
 
-function getTotalResults(query) {
-  const historyItems = JSON.parse(localStorage.getItem('history')) || false;
-
-  for (const item of historyItems) {
-    if (item.query === query) {
-      return item.totalItems;
-    }
-  }
+function createHistoryMarkup(query) {
+  return `
+    <h1 class="history-item" data-query="${query}">${query}</h1>
+  `
 }
 
 function lazyLoadSetup() {
@@ -217,10 +214,6 @@ function lazyLoadSetup() {
   }
 }
 
-function fadeIn(element) {
-  document.getElementById(element).classList.add("show");
-}
-
 // Renders an error message
 function showError(msg) {
   const $alert = document.getElementById("alert");
@@ -228,4 +221,8 @@ function showError(msg) {
   $alert.classList.add("bg-danger");
   fadeIn("alert");
   setTimeout(_ => $alert.classList.remove("show"), 2000);
+}
+
+function fadeIn(element) {
+  document.getElementById(element).classList.add("show");
 }
