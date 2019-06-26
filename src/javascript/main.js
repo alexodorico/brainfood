@@ -181,7 +181,7 @@ function getTotalResults(query) {
 function buttonSetup(query, offset) {
   let markup = `
     <button
-      class="bg-primary"
+      class="bg-primary shadow"
       data-offset="${Number(offset) + 10}"
       data-query="${query}"
       id="next-button"
@@ -191,7 +191,7 @@ function buttonSetup(query, offset) {
   if (Number(offset) > 0) {
     markup = `
       <button
-        class="bg-primary"
+        class="bg-primary shadow"
         data-offset="${Number(offset) - 10}"
         data-query="${query}"
         id="previous-button"

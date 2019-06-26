@@ -1,0 +1,122 @@
+/////////////////
+// TEXT COLORS //
+/////////////////
+.text-dark {
+  color: $brand_dark;
+}
+
+.text-darker {
+  color: $brand_darker;
+}
+
+.text-darkest {
+  color: $brand_darkest;
+}
+
+.text-light {
+  color: $brand_light;
+}
+
+.text-primary {
+  color: $brand_primary;
+}
+
+.text-success {
+  color: $brand_success;
+}
+
+.text-danger {
+  color: $brand_danger;
+}
+
+/////////////////
+// TEXT SIZES  //
+/////////////////
+.text-xlarge {
+  font-size: 1.5rem;
+}
+
+.text-large {
+  font-size: 1.25rem;
+}
+
+.text-medium {
+  font-size: 0.875rem;
+}
+
+.text-small {
+  font-size: 0.75rem;
+}
+
+.text-xsmall {
+  font-size: 0.625rem;
+}
+
+/////////////////
+// TEXT STYLES //
+/////////////////
+
+.text-bold {
+  font-weight: 600;
+}
+
+.text-bolder {
+  font-weight: 700;
+}
+
+.text-normal {
+  font-weight: 400;
+}
+
+.text-italic {
+  font-style: italic;
+}
+
+/////////////////
+//  BG COLORS  //
+/////////////////
+
+.bg-primary {
+  background-color: $brand_primary;
+}
+
+.bg-success {
+  background-color: $brand_success;
+}
+
+.bg-danger {
+  background-color: $brand_danger;
+}
+
+/////////////////
+//     MISC    //
+/////////////////
+.show {
+  opacity: 1 !important;
+  z-index: 999 !important;
+}
+
+.hide {
+  display: none;
+}
+
+.shadow {
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.33);
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.flex-parent {
+  display: flex;
+  flex-direction: row;
+}
+
+#view-history,
+#search-icon,
+.history-item {
+  cursor: pointer;
+}

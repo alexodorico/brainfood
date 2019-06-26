@@ -1,18 +1,102 @@
 @import '../../node_modules/normalize.css/normalize.css';
-@import 'fonts';
 @import 'variables';
+@import 'mixins';
+@import 'fonts';
 @import 'base';
-@import 'typography';
+@import 'helpers';
 
-.card-container {
-  padding: 0.9375rem;
-  margin-bottom: 0.9375rem;
-  border-radius: 8px;
-  animation: fadeIn 1s 1;
+#sticky {
+  background-color: $brand_light;
+  position: sticky;
+  padding: 0.625rem;
+  top: 0;
+  z-index: 999;
 }
 
-.fadeOut {
-  animation: fadeOut 0.25s 1;
+#book-icon {
+  fill: $brand_primary;
+  margin: 0.1rem 0.5rem;
+  @include box(30px);
+}
+
+#search-area {
+  margin-top: 0.5rem;
+}
+
+#search-bar {
+  border: 1px solid rgba(151, 151, 151, 0.33);
+  border-radius: 8px;
+  height: 40px;
+  padding-left: 0.8rem;
+  width: 100%;
+
+  &:focus {
+    border: 1px solid $brand_primary;
+    outline: 0;
+  }
+}
+
+#search-button {
+  background-color: transparent;
+  border: 0;
+  float: right;
+  padding: 0;
+  position: relative;
+  right: 15px;
+  top: -30px;
+}
+
+#search-icon {
+  fill: $brand_darkest;
+  @include box(20px);
+}
+
+#view-history {
+  color: $brand_dark;
+  text-align: right;
+  text-decoration: underline;
+  transition: color 0.08s ease-in-out;
+
+  &:hover {
+    color: $brand_darkest;
+  }
+}
+
+.history-item {
+  @include hoverClickTransition(#fff);
+}
+
+#results-area {
+  opacity: 0;
+  padding: 0 0.625rem 0.625rem;
+  transition: opacity 1.75s;
+}
+
+#results-count {
+  padding: 0.5rem;
+}
+
+#results {
+  margin-top: 0;
+}
+
+.init-text {
+  font-size: 1rem;
+  line-height: 1.56;
+  padding: 1rem 2rem 0;
+  text-align: center;
+
+  @media (min-width: 750px) {
+    font-size: 1.75rem;
+    padding: 1rem 4rem;
+  }
+}
+
+.card-container {
+  animation: fadeIn 1s 1;
+  border-radius: 8px;
+  margin-bottom: 0.9375rem;
+  padding: 0.9375rem;
 }
 
 @keyframes fadeIn {
@@ -25,225 +109,34 @@
   }
 }
 
-@keyframes fadeOut {
-  0% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
+#button-container {
+  margin-bottom: 1rem;
+  justify-content: space-between;
 }
 
-.button {
-  font-family: 'PT-Sans';
-  color: rgba(255, 255, 255, 0.9);
-  border: 0;
-  border-radius: 8px;
-  height: 40px;
+a.button {
+  display: block;
+  line-height: 40px;
+  margin-top: 0.5rem;
+  text-align: center;
+  text-decoration: none;
+  @include buttonBase();
+  @include hoverClickTransition($brand_success);
 }
 
 #next-button,
 #previous-button {
-  border: 0;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.33);
-  color: rgba(255, 255, 255, 0.9);
-  height: 40px;
-  border-radius: 8px;
   width: 48%;
-  font-family: 'PT-Sans';
-}
-
-#book-icon {
-  height: 30px;
-  width: 30px;
-  fill: $brand_primary;
-  margin: .1rem .5rem;
-}
-
-#search-button {
-  background-color: transparent;
-  padding: 0;
-  border: 0;
-  position: relative;
-  float: right;
-  top: -30px;
-  right: 15px;
-
-  &:focus {
-    outline: 0;
-  }
-}
-
-#search-area {
-  margin-top: 0.5rem;
-}
-
-#search-icon {
-  height: 20px;
-  width: 20px;
-  fill: $brand_darkest;
-}
-
-#search-bar {
-  width: 100%;
-  height: 40px;
-  border-radius: 8px;
-  border: 1px solid rgba(151, 151, 151, 0.33);
-  padding-left: 0.8rem;
-
-  &:focus {
-    outline: 0;
-    border: 1px solid $brand_primary;
-  }
-}
-
-#view-history {
-  text-decoration: underline;
-  text-align: right;
-  color: $brand_dark;
-  padding-top: 0.5rem;
-  transition: color 0.08s ease-in-out;
-
-  &:hover {
-    color: #000
-  }
-}
-
-.flex-parent {
-  display: flex;
-  flex-direction: row;
-}
-
-#results-count {
-  padding: 0.5rem;
-}
-
-#results-area {
-  opacity: 0;
-  transition: opacity 1.75s;
-  padding: 0 0.625rem 0.625rem;
-}
-
-.init-text {
-  text-align: center;
-  padding: 1rem 2rem 0;
-  line-height: 1.56;
-  font-size: 1rem;
-
-  @media (min-width: 750px) {
-    padding: 1rem 4rem;
-    font-size: 1.75rem;
-  }
-}
-
-button:focus {
-  outline: 0;
-}
-
-.show {
-  opacity: 1 !important;
-  z-index: 999 !important;
-}
-
-#view-history,
-#search-icon,
-.history-item {
-  cursor: pointer;
-}
-
-.history-item {
-  transition: box-shadow 0.08s ease-in-out, color 0.08s ease-in-out;
-
-  &:hover {
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.42);
-  }
-
-  &:active {
-    box-shadow: 0 0;
-  }
-}
-
-.hide {
-  display: none;
-}
-
-#results {
-  margin-top: 0;
+  @include buttonBase();
+  @include hoverClickTransition($brand_primary);
 }
 
 #next-button {
   float: right;
 }
 
-.clearfix::after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
 #previous-button {
   float: left;
-}
-
-#button-container {
-  margin-bottom: 1rem;
-  justify-content: space-between;
-}
-
-#sticky {
-  background-color: $brand_light;
-  position: sticky;
-  padding: 0.625rem;
-  top: 0;
-  z-index: 999;
-}
-
-a.button {
-  display: block;
-  text-align: center;
-  line-height: 40px;
-  text-decoration: none;
-  margin-top: 0.5rem;
-}
-
-a.button {
-  transition: background-color 0.08s ease-in-out, box-shadow 0.08s ease-in-out;
-
-  &:hover {
-    background-color: lighten($brand_success, 3%);
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.42);
-  }
-
-  &:active {
-    background-color: darken($brand_success, 3%);
-    box-shadow: 0 0;
-  }
-}
-
-#next-button,
-#previous-button {
-  transition: background-color 0.08s ease-in-out box-shadow 0.08s ease-in-out;
-
-  &:hover {
-    background-color: lighten($brand_primary, 3%);
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.42);
-  }
-
-  &:active {
-    background-color: darken($brand_primary, 3%);
-    box-shadow: 0 0;
-  }
-}
-
-@keyframes onButtonDown {
-  0% {
-    transform: rotateY(45deg)
-  }
-
-  100% {
-    transform: rotateY(30deg);
-  }
 }
 
 #alert {

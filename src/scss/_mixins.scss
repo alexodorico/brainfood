@@ -1,0 +1,30 @@
+@mixin buttonBase() {
+  font-family: 'PT-Sans';
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  border: 0;
+  height: 40px;
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+@mixin hoverClickTransition($color) {
+  transition: background-color 0.08s ease-in-out, box-shadow 0.08s ease-in-out;
+
+  &:hover {
+      background-color: lighten($color, 3%);
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.42);
+  }
+
+  &:active {
+      background-color: darken($color, 3%);
+      box-shadow: 0 0;
+  }
+}
+
+@mixin box($size) {
+  height: $size;
+  width: $size;
+}
