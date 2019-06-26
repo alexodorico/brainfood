@@ -169,7 +169,7 @@ function changePage(event) {
 }
 
 function getTotalResults(query) {
-  const historyItems = JSON.parse(localStorage.getItem('history')) || false;
+  const historyItems = JSON.parse(localStorage.getItem("history")) || false;
 
   for (const item of historyItems) {
     if (item.query === query) {
