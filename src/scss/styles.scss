@@ -122,11 +122,12 @@ button:focus {
 #next-button,
 #previous-button {
   border: 0;
-  box-shadow: 0;
-  color: $brand_light;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.33);
+  color: rgba(255, 255, 255, 0.9);
   height: 40px;
   border-radius: 8px;
   width: 48%;
+  font-family: 'PT-Sans';
 }
 
 #next-button {
@@ -153,16 +154,15 @@ button:focus {
   position: sticky;
   padding: 0.625rem;
   top: 0;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.33);
 }
 
-// #next-button {
-//   float: right;
-// }
-
-// #previous-button {
-//   float: left;
-// }
+a.button {
+  display: block;
+  text-align: center;
+  line-height: 40px;
+  text-decoration: none;
+  margin-top: 0.5rem;
+}
 
 #alert {
   position: fixed;

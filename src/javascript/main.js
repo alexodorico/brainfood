@@ -128,7 +128,7 @@ function viewHistoryAll() {
     return history.forEach(historyItem => $results.insertAdjacentHTML("beforeend", createHistoryMarkup(historyItem.query)));
   }
 
-  return $results.insertAdjacentHTML("beforeend", "<li><p class='text-primary'>Looks like you either haven't made any searches yet, or your browsing history was recently cleared!</p></li>");
+  return $results.insertAdjacentHTML("beforeend", "<li><p class='text-primary'>Looks like you haven't made any searches yet!</p></li>");
 }
 
 // Handles history item click
@@ -160,10 +160,23 @@ function getTotalResults(query) {
 }
 
 function buttonSetup(query, offset) {
-  let markup = `<button class="bg-primary shadow" data-offset="${Number(offset) + 10}" data-query="${query}" id="next-button">Next</button>`;
+  let markup = `
+    <button
+      class="bg-primary"
+      data-offset="${Number(offset) + 10}"
+      data-query="${query}"
+      id="next-button"
+      >Next
+    </button>`;
 
   if (Number(offset) > 0) {
-    markup = `<button class="bg-primary shadow" data-offset="${Number(offset) - 10}" data-query="${query}" id="previous-button">Previous</button>` + markup;
+    markup = `
+      <button
+        class="bg-primary"
+        data-offset="${Number(offset) - 10}"
+        data-query="${query}"
+        id="previous-button"
+        >Previous</button>` + markup;
   }
 
   document.getElementById("button-container").innerHTML = markup;
@@ -182,7 +195,7 @@ function createCardMarkup(bookData) {
       <h3 class="text-medium text-normal ${bookData.subtitle || "hide"}">${bookData.subtitle}</h3>
       <h4 class="text-small text-darker text-bold ${bookData.authors || "hide"}">${bookData.authors}</h4>
       <img class="cover-image lazy ${bookData.thumbnail || "hide"}" data-src="${bookData.thumbnail}" height="190" width="129" src="https://via.placeholder.com/129x190">
-      <a class="button bg-success ${bookData.infoLink || "hide"}" href="${bookData.infoLink}" target="_blank">Learn More</a>
+      <a class="button bg-success shadow ${bookData.infoLink || "hide"}" href="${bookData.infoLink}" target="_blank">Learn More</a>
     </li>
   `
 }
