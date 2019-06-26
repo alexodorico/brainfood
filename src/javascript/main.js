@@ -220,7 +220,7 @@ function createCardMarkup(bookData) {
 
 function createHistoryMarkup(query) {
   return `
-    <h1 class="history-item" data-query="${query}">${query}</h1>
+    <li class="history-item card-container shadow" data-query="${query}">${query}</li>
   `
 }
 
