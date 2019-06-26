@@ -8,6 +8,31 @@
   padding: 0.9375rem;
   margin-bottom: 0.9375rem;
   border-radius: 8px;
+  animation: fadeIn 1s 1;
+}
+
+.fadeOut {
+  animation: fadeOut 0.25s 1;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 .button {
@@ -15,7 +40,18 @@
   color: rgba(255, 255, 255, 0.9);
   border: 0;
   border-radius: 8px;
-  height: 39px;
+  height: 40px;
+}
+
+#next-button,
+#previous-button {
+  border: 0;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.33);
+  color: rgba(255, 255, 255, 0.9);
+  height: 40px;
+  border-radius: 8px;
+  width: 48%;
+  font-family: 'PT-Sans';
 }
 
 #book-icon {
@@ -67,6 +103,11 @@
   text-align: right;
   color: $brand_dark;
   padding-top: 0.5rem;
+  transition: color 0.08s ease-in-out;
+
+  &:hover {
+    color: #000
+  }
 }
 
 .flex-parent {
@@ -105,10 +146,22 @@ button:focus {
   z-index: 999 !important;
 }
 
-#view-history:hover,
-#search-icon:hover,
-.history-item:hover {
+#view-history,
+#search-icon,
+.history-item {
   cursor: pointer;
+}
+
+.history-item {
+  transition: box-shadow 0.08s ease-in-out, color 0.08s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.42);
+  }
+
+  &:active {
+    box-shadow: 0 0;
+  }
 }
 
 .hide {
@@ -117,17 +170,6 @@ button:focus {
 
 #results {
   margin-top: 0;
-}
-
-#next-button,
-#previous-button {
-  border: 0;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.33);
-  color: rgba(255, 255, 255, 0.9);
-  height: 40px;
-  border-radius: 8px;
-  width: 48%;
-  font-family: 'PT-Sans';
 }
 
 #next-button {
@@ -154,6 +196,7 @@ button:focus {
   position: sticky;
   padding: 0.625rem;
   top: 0;
+  z-index: 999;
 }
 
 a.button {
@@ -162,6 +205,45 @@ a.button {
   line-height: 40px;
   text-decoration: none;
   margin-top: 0.5rem;
+}
+
+a.button {
+  transition: background-color 0.08s ease-in-out, box-shadow 0.08s ease-in-out;
+
+  &:hover {
+    background-color: lighten($brand_success, 3%);
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.42);
+  }
+
+  &:active {
+    background-color: darken($brand_success, 3%);
+    box-shadow: 0 0;
+  }
+}
+
+#next-button,
+#previous-button {
+  transition: background-color 0.08s ease-in-out box-shadow 0.08s ease-in-out;
+
+  &:hover {
+    background-color: lighten($brand_primary, 3%);
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.42);
+  }
+
+  &:active {
+    background-color: darken($brand_primary, 3%);
+    box-shadow: 0 0;
+  }
+}
+
+@keyframes onButtonDown {
+  0% {
+    transform: rotateY(45deg)
+  }
+
+  100% {
+    transform: rotateY(30deg);
+  }
 }
 
 #alert {
@@ -176,4 +258,3 @@ a.button {
   border-radius: 8px;
   z-index: -1;
 }
-

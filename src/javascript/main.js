@@ -78,7 +78,7 @@ function fetchData(query, endpoint, offset = 0) {
       }
   })
   .catch(_ => {
-    showError("Sorry, we can't get new book while you're offline!");
+    showError("Sorry, we can't get new books while you're offline!");
   })
 }
 
@@ -104,7 +104,7 @@ function render(query, bookData, offset = 0) {
   const $results = document.getElementById("results");
   const totalItems = getTotalResults(query);
 
-  $results.innerHTML = new String();
+  DESTROYHTML("results");
   document.getElementById("results-count").innerHTML = `${totalItems} results for <span class="text-bold">${query}</span>`;
   bookData.forEach(book => $results.insertAdjacentHTML("beforeend", createCardMarkup(book)));
   buttonSetup(query, offset);
@@ -134,13 +134,11 @@ function manageHistory(query, totalItems, offset = 0) {
 // Handles "View Search History" click
 function viewHistoryAll() {
   const $results = document.getElementById("results");
-  const $buttonContainer = document.getElementById("button-container");
-  const $resultsCount = document.getElementById("results-count");
   const history = JSON.parse(localStorage.getItem("history")) || false;
 
-  $results.innerHTML = new String();
-  $buttonContainer.innerHTML = new String();
-  $resultsCount.innerHTML = new String();
+  DESTROYHTML("results");
+  DESTROYHTML("button-container");
+  DESTROYHTML("results-count");
   
   if (history) {
     return history.forEach(historyItem => $results.insertAdjacentHTML("beforeend", createHistoryMarkup(historyItem.query)));
@@ -163,6 +161,9 @@ function viewHistoryItem(event) {
 function changePage(event) {
   const query = event.target.dataset.query;
   const offset = event.target.dataset.offset;
+  DESTROYHTML("results");
+  DESTROYHTML("results-count");
+  DESTROYHTML("button-container");
   getBooks(query, offset);
   document.body.scrollTop = document.documentElement.scrollTop = 0;
 }
@@ -256,4 +257,9 @@ function showError(msg) {
 
 function fadeIn(element) {
   document.getElementById(element).classList.add("show");
+}
+
+// ...please take me seriously
+function DESTROYHTML(id) {
+  document.getElementById(id).innerHTML = new String();
 }
