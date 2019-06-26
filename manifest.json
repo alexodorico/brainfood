@@ -3,12 +3,12 @@
   "name": "BRAINFOOD",
   "icons": [
     {
-      "src": "dist/icons/icon-192px.png",
+      "src": "icon-192px.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "dist/icons/icon-512px.png",
+      "src": "icon-512px.png",
       "type": "image/png",
       "sizes": "512x512"
     }
