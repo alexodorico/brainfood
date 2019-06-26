@@ -1,8 +1,6 @@
 /*
   TODO
   make function for saving to local storage?
-  Error handling
-  Handle book that don't have all data
   Add # of results
   Add buttons for next/previous page
   Implement favorites?
@@ -23,7 +21,6 @@ function getQuery() {
 }
 
 // Searches for books if user hits enter
-// Fix this, there's a better way
 function handleKeyUp(event) {
   const query = getQuery();
 
@@ -45,19 +42,19 @@ function handleSearch() {
   return showError("Oops! Can't search for nothing.")
 }
 
-// Checks local storage for results. If none, make fetch data 
-function getBooks(query) {
-  const endpoint = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
+// Checks local storage for results. If none, fetch data 
+function getBooks(query, offset = 0) {
+  const endpoint = `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${offset}`;
   const cachedResults = localStorage.getItem(endpoint) || false;
 
   if (cachedResults) {
-    return render(query, JSON.parse(cachedResults));
+    return render(query, JSON.parse(cachedResults), offset);
   }
 
-  return fetchData(query, endpoint);
+  return fetchData(query, endpoint, offset);
 }
 
-function fetchData(query, endpoint) {
+function fetchData(query, endpoint, offset = 0) {
   return fetch(endpoint).then(response => {
     if (response.status === 200) {
       response
@@ -66,8 +63,8 @@ function fetchData(query, endpoint) {
           const simplifiedData = simplifyData(data.items);
 
           localStorage.setItem(endpoint, JSON.stringify(simplifiedData));
-          manageHistory(query, data.totalItems);
-          render(query, simplifiedData);
+          if (offset === 0) manageHistory(query, data.totalItems);
+          render(query, simplifiedData, offset);
         })
         .catch(_ => {
           showError("Oops. Something went wrong, mind trying again in a sec?");
@@ -116,7 +113,7 @@ function createHistoryMarkup(query) {
 function viewHistoryItem(event) {
   if (event.target.classList.contains("history-item")) {
     const query = event.target.dataset.query;
-    const endpoint = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
+    const endpoint = `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=0`;
 
     return render(query, JSON.parse(localStorage.getItem(endpoint)));
   }
@@ -153,14 +150,38 @@ function createCardMarkup(bookData) {
 }
 
 // Generate HTML and sets #results's contents to it
-function render(query, bookData) {
+function render(query, bookData, offset = 0) {
   const $results = document.getElementById("results");
   const totalItems = getTotalResults(query);
 
   $results.innerHTML = new String();
   document.getElementById("results-count").innerHTML = `${totalItems} results for <span class="text-bold">${query}</span>`;
   bookData.forEach(book => $results.insertAdjacentHTML("beforeend", createCardMarkup(book)));
+  buttonSetup(query, offset);
   lazyLoadSetup();
+}
+
+function buttonSetup(query, offset) {
+  let markup = `<button class="bg-primary shadow" data-offset="${Number(offset) + 10}" data-query="${query}" id="next-button">Next</button>`;
+
+  if (Number(offset) > 0) {
+    markup = `<button class="bg-primary shadow" data-offset="${Number(offset) - 10}" data-query="${query}" id="previous-button">Previous</button>` + markup;
+  }
+
+  document.getElementById("button-container").innerHTML = markup;
+  document.getElementById("next-button").addEventListener("click", changePage);
+
+  if (Number(offset) > 0) {
+    document.getElementById("previous-button").addEventListener("click", changePage);
+  }
+}
+
+function changePage(event) {
+  const query = event.target.dataset.query;
+  const offset = event.target.dataset.offset;
+  console.log(offset);
+  getBooks(query, offset);
+  document.body.scrollTop = document.documentElement.scrollTop = 0;
 }
 
 function getTotalResults(query) {
@@ -200,8 +221,9 @@ function fadeIn(element) {
 
 // Renders an error message
 function showError(msg) {
-  document.getElementById("alert").innerHTML = msg;
-  document.getElementById("alert").classList.add("bg-danger");
+  const $alert = document.getElementById("alert");
+  $alert.innerHTML = msg;
+  $alert.classList.add("bg-danger");
   fadeIn("alert");
-  setTimeout(_ => document.getElementById("alert").classList.remove("show"), 2000);
+  setTimeout(_ => $alert.classList.remove("show"), 2000);
 }
