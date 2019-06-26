@@ -11,7 +11,12 @@ self.addEventListener("install", event => {
           "/",
           "/index.html",
           "/dist/bundle.css",
-          "/dist/main.js"
+          "/dist/main.js",
+          "/dist/fonts/Nunito-Black.ttf",
+          "/dist/fonts/Nunito-Bold.ttf",
+          "/dist/fonts/Nunito-Regular.ttf",
+          "/dist/fonts/PT_Sans-Web-Bold.ttf",
+          "/dist/fonts/PT_Sans-Web-BoldItalic.ttf"
         ]
       );
     })
