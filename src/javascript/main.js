@@ -59,23 +59,27 @@ function getBooks(query, offset = 0) {
 }
 
 function fetchData(query, endpoint, offset = 0) {
-  return fetch(endpoint).then(response => {
-    if (response.status === 200) {
-      response
-        .json()
-        .then(data => {
-          const simplifiedData = simplifyData(data.items);
-          localStorage.setItem(endpoint, JSON.stringify(simplifiedData));
-          manageHistory(query, data.totalItems, offset);
-          render(query, simplifiedData, offset);
-        })
-        .catch(_ => {
-          showError("Oops. Something went wrong, mind trying again in a sec?");
-        });
-    } else {
-      showError("Oops. Something went wrong, mind trying again in a sec?");
-    }
-  });
+  return fetch(endpoint)
+    .then(response => {
+      if (response.status === 200) {
+        response
+          .json()
+          .then(data => {
+            const simplifiedData = simplifyData(data.items);
+            localStorage.setItem(endpoint, JSON.stringify(simplifiedData));
+            manageHistory(query, data.totalItems, offset);
+            render(query, simplifiedData, offset);
+          })
+          .catch(_ => {
+            showError("Oops. Something went wrong, mind trying again in a sec?");
+          });
+      } else {
+        showError("Oops. Something went wrong, mind trying again in a sec?");
+      }
+  })
+  .catch(_ => {
+    showError("Sorry, we can't get new book while you're offline!");
+  })
 }
 
 // Simplify data structure and save space in local storage
