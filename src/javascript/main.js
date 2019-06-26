@@ -120,9 +120,13 @@ function manageHistory(query, totalItems, offset = 0) {
 // Handles "View Search History" click
 function viewHistoryAll() {
   const $results = document.getElementById("results");
+  const $buttonContainer = document.getElementById("button-container");
+  const $resultsCount = document.getElementById("results-count");
   const history = JSON.parse(localStorage.getItem("history")) || false;
 
   $results.innerHTML = new String();
+  $buttonContainer.innerHTML = new String();
+  $resultsCount.innerHTML = new String();
   
   if (history) {
     return history.forEach(historyItem => $results.insertAdjacentHTML("beforeend", createHistoryMarkup(historyItem.query)));
