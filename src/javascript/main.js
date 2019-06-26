@@ -39,7 +39,7 @@ function handleSearch() {
     return getBooks(query);
   }
 
-  return showError("Oops! Can't search for nothing.")
+  return showError("Oops! Can't search for nothing.");
 }
 
 // Checks local storage for results. If none, fetch data 
@@ -61,9 +61,8 @@ function fetchData(query, endpoint, offset = 0) {
         .json()
         .then(data => {
           const simplifiedData = simplifyData(data.items);
-
           localStorage.setItem(endpoint, JSON.stringify(simplifiedData));
-          if (offset === 0) manageHistory(query, data.totalItems);
+          manageHistory(query, data.totalItems, offset);
           render(query, simplifiedData, offset);
         })
         .catch(_ => {
@@ -75,8 +74,11 @@ function fetchData(query, endpoint, offset = 0) {
   });
 }
 
+function manageHistory(query, totalItems, offset = 0) {
 
-function manageHistory(query, totalItems) {
+  // If there's an offset, no need to add duplicate entry in history
+  if (offset > 0) return 
+
   const history = JSON.parse(localStorage.getItem("history")) || false;
   const historyItem = {
     query,
@@ -96,6 +98,7 @@ function viewHistoryAll() {
   const history = JSON.parse(localStorage.getItem("history")) || false;
 
   $results.innerHTML = new String();
+  
   if (history) {
     return history.forEach(historyItem => $results.insertAdjacentHTML("beforeend", createHistoryMarkup(historyItem.query)));
   }
@@ -179,7 +182,6 @@ function buttonSetup(query, offset) {
 function changePage(event) {
   const query = event.target.dataset.query;
   const offset = event.target.dataset.offset;
-  console.log(offset);
   getBooks(query, offset);
   document.body.scrollTop = document.documentElement.scrollTop = 0;
 }
