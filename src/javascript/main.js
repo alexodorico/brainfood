@@ -1,8 +1,6 @@
 import "../scss/styles.scss";
 
 (_=> {
-  window.onload = fadeIn("results-area");
-
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("../../serviceworker.js")
       .then(registration => {
@@ -13,40 +11,48 @@ import "../scss/styles.scss";
       });
   }
 
-  document.getElementById("search-button").addEventListener("click", handleSearch);
-  document.getElementById("search-bar").addEventListener("keyup", handleKeyUp);
-  document.getElementById("view-history").addEventListener("click", viewHistoryAll);
-  document.getElementById("results-area").addEventListener("click", viewHistoryItem);
+  /*
+    Add shadow to sticky header if user scrolls more than 20px
+  */
+  window.addEventListener("scroll", e => {
+    if (window.scrollY > 20) {
+      getById("sticky").classList.add("bottom-shadow");
+    } else {
+      getById("sticky").classList.remove("bottom-shadow");
+    }
+  });
+
+  getById("search-button").addEventListener("click", handleSearch);
+  getById("search-bar").addEventListener("keyup", handleSearch);
+  getById("view-history").addEventListener("click", viewHistoryAll);
+  getById("results-area").addEventListener("click", viewHistoryItem);
 })();
 
-// Get value of search bar
-function getQuery() {
-  return document.getElementById("search-bar").value;
-}
+/*
+  1. If empty search, display error
+  2. If user clicks on search icon or hits enter, initiate search
+  The "else if" prevents error from being displayed if the user
+  hits backspace on final character or an empty search bar
+*/
+function handleSearch(e) {
+  const query = getById("search-bar").value;
 
-// Searches for books if user hits enter
-function handleKeyUp(event) {
-  const query = getQuery();
-
-  if (event.keyCode === 13 && query.length) {
-    return getBooks(query);
-  } else if (event.keyCode === 13) {
-    return showError("Oops! Can't search for nothing.");
+  if (query) {
+    if (event.type === "click" || event.keyCode === 13) {
+      rotateIcon();
+      getBooks(query);
+      scrollToTop();
+    }
+    return;
+  } else if (event.keyCode === 8) {
+    return;
   }
-}
-
-// Search for books if user clicks search icon
-function handleSearch() {
-  const query = getQuery();
-
-  if (query.length) {
-    return getBooks(query);
-  }
-
   return showError("Oops! Can't search for nothing.");
 }
 
-// Checks local storage for results. If none, fetchs data 
+/*
+  Checks local storage for results before making API call
+*/
 function getBooks(query, offset = 0) {
   const endpoint = `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${offset}`;
   const cachedResults = localStorage.getItem(endpoint) || false;
@@ -65,10 +71,7 @@ function fetchData(query, endpoint, offset = 0) {
         response
           .json()
           .then(data => {
-            const simplifiedData = simplifyData(data.items);
-            localStorage.setItem(endpoint, JSON.stringify(simplifiedData));
-            manageHistory(query, data.totalItems, offset);
-            render(query, simplifiedData, offset);
+            handleSuccessfulFetch(data, endpoint, query, offset);
           })
           .catch(_ => {
             showError("Oops. Something went wrong, mind trying again in a sec?");
@@ -77,12 +80,25 @@ function fetchData(query, endpoint, offset = 0) {
         showError("Oops. Something went wrong, mind trying again in a sec?");
       }
   })
+
+  // If there's a fetch error, the user is probably offline
   .catch(_ => {
     showError("Sorry, we can't get new books while you're offline!");
   })
 }
 
-// Simplify data structure and save space in local storage
+function handleSuccessfulFetch(data, endpoint, query, offset = 0) {
+  const simplifiedData = simplifyData(data.items);
+
+  localStorage.setItem(endpoint, JSON.stringify(simplifiedData));
+  manageHistory(query, data.totalItems, offset);
+  render(query, simplifiedData, offset);
+}
+
+/*
+  Simplifies data structure to minimize space in local storage
+  Returns array of objects
+*/
 function simplifyData(data) {
   return data.map(item => {
     const { id, volumeInfo: { authors, title, subtitle, infoLink }} = item;
@@ -99,19 +115,23 @@ function simplifyData(data) {
   });
 }
 
-// Generates HTML for buttons, cards, and result count
+/*
+  Generates markup for buttons, cards, and results count
+*/
 function render(query, bookData, offset = 0) {
-  const $results = document.getElementById("results");
+  const $results = getById("results");
   const totalItems = getTotalResults(query);
 
-  DESTROYHTML("results");
-  document.getElementById("results-count").innerHTML = `${totalItems} results for <span class="text-bold">${query}</span>`;
+  destroyHTML("results");
+  getById("results-count").innerHTML = `${totalItems} results for <span class="text-bold">${query}</span>`;
   bookData.forEach(book => $results.insertAdjacentHTML("beforeend", createCardMarkup(book)));
   buttonSetup(query, offset);
   lazyLoadSetup();
 }
 
-// Updates history in local storage. If there's no history, creates history
+/*
+  Updates history in local storage. If there's no history, history is created
+*/
 function manageHistory(query, totalItems, offset = 0) {
 
   // If there's an offset, no need to add duplicate entry in history
@@ -131,23 +151,28 @@ function manageHistory(query, totalItems, offset = 0) {
   }
 }
 
-// Handles "View Search History" click
+/*
+  Handles "Search History" click
+*/
 function viewHistoryAll() {
-  const $results = document.getElementById("results");
+  const $results = getById("results");
   const history = JSON.parse(localStorage.getItem("history")) || false;
 
-  DESTROYHTML("results");
-  DESTROYHTML("button-container");
-  DESTROYHTML("results-count");
+  destroyHTML("results");
+  destroyHTML("button-container");
+  destroyHTML("results-count");
   
   if (history) {
+    $results.innerHTML = "<h2 style='margin-bottom: 0.5em;'>Recent Searches</h2>";
     return history.forEach(historyItem => $results.insertAdjacentHTML("beforeend", createHistoryMarkup(historyItem.query)));
   }
 
-  return $results.insertAdjacentHTML("beforeend", "<li><p class='text-primary'>Looks like you haven't made any searches yet!</p></li>");
+  return $results.insertAdjacentHTML("beforeend", "<li><p class='init-text text-large'>Looks like you haven't made any searches yet!</p></li>");
 }
 
-// Handles history item click
+/*
+  Handles history item click
+*/
 function viewHistoryItem(event) {
   if (event.target.classList.contains("history-item")) {
     const query = event.target.dataset.query;
@@ -157,15 +182,19 @@ function viewHistoryItem(event) {
   }
 }
 
-// Handler for next/previous button clicks
+/*
+  Handles next/previous button clicks
+*/
 function changePage(event) {
   const query = event.target.dataset.query;
   const offset = event.target.dataset.offset;
-  DESTROYHTML("results");
-  DESTROYHTML("results-count");
-  DESTROYHTML("button-container");
+
+  destroyHTML("results");
+  destroyHTML("results-count");
+  destroyHTML("button-container");
+  rotateIcon();
   getBooks(query, offset);
-  document.body.scrollTop = document.documentElement.scrollTop = 0;
+  scrollTop();
 }
 
 function getTotalResults(query) {
@@ -198,11 +227,11 @@ function buttonSetup(query, offset) {
         >Previous</button>` + markup;
   }
 
-  document.getElementById("button-container").innerHTML = markup;
-  document.getElementById("next-button").addEventListener("click", changePage);
+  getById("button-container").innerHTML = markup;
+  getById("next-button").addEventListener("click", changePage);
 
   if (Number(offset) > 0) {
-    document.getElementById("previous-button").addEventListener("click", changePage);
+    getById("previous-button").addEventListener("click", changePage);
   }
 }
 
@@ -248,18 +277,27 @@ function lazyLoadSetup() {
 
 // Renders an error message
 function showError(msg) {
-  const $alert = document.getElementById("alert");
-  $alert.innerHTML = msg;
-  $alert.classList.add("bg-danger");
-  fadeIn("alert");
-  setTimeout(_ => $alert.classList.remove("show"), 2000);
+  getById("alert").innerHTML = msg;
+  // $alert.innerHTML = msg;
+  getById("alert").classList.add("show");
+  // document.getElementById("alert").innerHTML = msg;
+  // document.getElementById("alert").classList.add("show");
+  setTimeout(_ => getById("alert").classList.remove("show"), 2000);
 }
 
-function fadeIn(element) {
-  document.getElementById(element).classList.add("show");
+function destroyHTML(id) {
+  getById(id).innerHTML = new String();
 }
 
-// ...please take me seriously
-function DESTROYHTML(id) {
-  document.getElementById(id).innerHTML = new String();
+function rotateIcon() {
+  getById("search-icon").classList.add("rotate");
+  setTimeout(_=> getById("search-icon").classList.remove("rotate"), 2000);
+}
+
+function scrollToTop() {
+  document.body.scrollTop = document.documentElement.scrollTop = 0;
+}
+
+function getById(id) {
+  return document.getElementById(id);
 }

@@ -18,8 +18,16 @@ h1,
 h2,
 h3,
 h4 {
-  margin-top: 0;
-  margin-bottom: 0.33rem;
+  margin: 0;
+}
+
+h3,
+h4 {
+  margin-top: 0.25em;
+}
+
+img {
+  margin: 0.75rem 0;
 }
 
 ul {

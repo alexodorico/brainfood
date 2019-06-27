@@ -13,6 +13,14 @@
   z-index: 999;
 }
 
+.bottom-shadow {
+  box-shadow: 0 18px 15px -25px #666; // hail stan
+}
+
+header h1 {
+  margin-bottom: 0;
+}
+
 #book-icon {
   fill: $brand_primary;
   margin: 0.1rem 0.5rem;
@@ -40,6 +48,7 @@
   background-color: transparent;
   border: 0;
   float: right;
+  outline: 0;
   padding: 0;
   position: relative;
   right: 15px;
@@ -51,15 +60,26 @@
   @include box(20px);
 }
 
-#view-history {
-  color: $brand_dark;
-  text-align: right;
-  text-decoration: underline;
-  transition: color 0.08s ease-in-out;
+.rotate {
+  animation: 0.4s ease-out 1 onSearch; 
+}
 
-  &:hover {
-    color: $brand_darkest;
+@keyframes onSearch {
+  0% {
+    transform: rotateY(0deg);
   }
+
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+#view-history {
+  line-height: 40px;
+  margin-top: -1em;
+  width: 100%;
+  @include buttonBase();
+  @include hoverClickTransition($brand_primary);
 }
 
 .history-item {
@@ -67,9 +87,7 @@
 }
 
 #results-area {
-  opacity: 0;
   padding: 0 0.625rem 0.625rem;
-  transition: opacity 1.75s;
 }
 
 #results-count {
@@ -81,15 +99,9 @@
 }
 
 .init-text {
-  font-size: 1rem;
   line-height: 1.56;
-  padding: 1rem 2rem 0;
+  padding: 0 2rem;
   text-align: center;
-
-  @media (min-width: 750px) {
-    font-size: 1.75rem;
-    padding: 1rem 4rem;
-  }
 }
 
 .card-container {
@@ -117,7 +129,6 @@
 a.button {
   display: block;
   line-height: 40px;
-  margin-top: 0.5rem;
   text-align: center;
   text-decoration: none;
   @include buttonBase();
@@ -150,4 +161,32 @@ a.button {
   transition: opacity 0.5s;
   border-radius: 8px;
   z-index: -1;
+}
+
+@media (min-width: 750px) {
+  body {
+    max-width: initial;
+  }
+
+  header,
+  #search-area,
+  #results-area {
+    margin: 0 auto;
+    max-width: 735px;
+  }
+
+  header,
+  #search-area {
+    margin-bottom: 0.5em;
+  }
+
+  #view-history {
+    float: right;
+    margin: 0.625em -1.25em 0;
+    width: 150px;
+  }
+
+  .init-text {
+    padding: 0 12rem;
+  }
 }
