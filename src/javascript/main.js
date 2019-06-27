@@ -40,8 +40,8 @@ function handleSearch(e) {
   if (query) {
     if (event.type === "click" || event.keyCode === 13) {
       rotateIcon();
-      getBooks(query);
       scrollToTop();
+      getBooks(query);
     }
     return;
   } else if (event.keyCode === 8) {
@@ -193,8 +193,8 @@ function changePage(event) {
   destroyHTML("results-count");
   destroyHTML("button-container");
   rotateIcon();
-  getBooks(query, offset);
   scrollToTop();
+  getBooks(query, offset);
 }
 
 function getTotalResults(query) {
