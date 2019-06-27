@@ -1,13 +1,13 @@
 {
-  "name": "gbooks-challenge",
+  "name": "brainfood",
   "version": "1.0.0",
   "description": "Google Books Search Engine",
-  "main": "main.js",
+  "main": "index.html",
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm install ; npm run build ; node server.js"
   },
-  "author": "Eric Krawczyk",
+  "author": "Alex Odorico",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.4.5",
