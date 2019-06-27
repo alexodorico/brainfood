@@ -278,10 +278,7 @@ function lazyLoadSetup() {
 // Renders an error message
 function showError(msg) {
   getById("alert").innerHTML = msg;
-  // $alert.innerHTML = msg;
   getById("alert").classList.add("show");
-  // document.getElementById("alert").innerHTML = msg;
-  // document.getElementById("alert").classList.add("show");
   setTimeout(_ => getById("alert").classList.remove("show"), 2000);
 }
 
