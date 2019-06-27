@@ -194,7 +194,7 @@ function changePage(event) {
   destroyHTML("button-container");
   rotateIcon();
   getBooks(query, offset);
-  scrollTop();
+  scrollToTop();
 }
 
 function getTotalResults(query) {
