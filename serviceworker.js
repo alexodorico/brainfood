@@ -14,9 +14,7 @@ self.addEventListener("install", event => {
           "/dist/main.js",
           "/dist/fonts/Nunito-Black.ttf",
           "/dist/fonts/Nunito-Bold.ttf",
-          "/dist/fonts/Nunito-Regular.ttf",
-          "/dist/fonts/PT_Sans-Web-Bold.ttf",
-          "/dist/fonts/PT_Sans-Web-BoldItalic.ttf"
+          "/dist/fonts/Nunito-Regular.ttf"
         ]
       );
     })
