@@ -163,8 +163,8 @@ function viewHistoryAll() {
   destroyHTML("results-count");
   
   if (history) {
-    $results.innerHTML = "<h2 style='margin-bottom: 0.5em;'>Recent Searches</h2>";
-    return history.forEach(historyItem => $results.insertAdjacentHTML("beforeend", createHistoryMarkup(historyItem.query)));
+    $results.innerHTML = "<div id='history'><h2 style='margin-bottom: 0.5em;'>Recent Searches</h2></div>";
+    return history.forEach(historyItem => getById("history").insertAdjacentHTML("beforeend", createHistoryMarkup(historyItem.query)));
   }
 
   return $results.insertAdjacentHTML("beforeend", "<li><p class='init-text text-large'>Looks like you haven't made any searches yet!</p></li>");
