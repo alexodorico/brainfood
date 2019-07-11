@@ -239,9 +239,11 @@ function buttonSetup(query, offset) {
 function createCardMarkup(bookData) {
   return `
     <li class="card-container shadow ${bookData.id || "hide"}" id="${bookData.id}">
-      <h2 class="text-large text-bold ${bookData.title || "hide"}">${bookData.title}</h2>
-      <h3 class="text-medium text-normal ${bookData.subtitle || "hide"}">${bookData.subtitle}</h3>
-      <h4 class="text-small text-darker text-bold ${bookData.authors || "hide"}">${bookData.authors}</h4>
+      <div class="book-info">
+        <h2 class="text-large text-bold ${bookData.title || "hide"}">${bookData.title}</h2>
+        <h3 class="text-medium text-normal ${bookData.subtitle || "hide"}">${bookData.subtitle}</h3>
+        <h4 class="text-small text-darker text-bold ${bookData.authors || "hide"}">${bookData.authors}</h4>
+      </div>
       <img class="cover-image lazy ${bookData.thumbnail || "hide"}" data-src="${bookData.thumbnail}" height="190" width="129" src="https://via.placeholder.com/129x190">
       <a class="button bg-success shadow ${bookData.infoLink || "hide"}" href="${bookData.infoLink}" target="_blank">Learn More</a>
     </li>

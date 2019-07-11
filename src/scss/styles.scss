@@ -87,7 +87,7 @@ header h1 {
 }
 
 #results-area {
-  padding: 0 0.625rem 0.625rem;
+  padding: 0.625rem;
 }
 
 #results-count {
@@ -102,6 +102,10 @@ header h1 {
   line-height: 1.56;
   padding: 0 2rem;
   text-align: center;
+
+  .text-xlarge {
+    margin-top: 1.5rem;
+  }
 }
 
 .card-container {
@@ -168,8 +172,53 @@ a.button {
     max-width: initial;
   }
 
-  header,
-  #search-area,
+  #sticky {
+    display: flex;
+    max-width: 735px;
+    margin: 0 auto;
+    padding: 1rem 0.625rem;
+  }
+
+  header {
+    margin: 0;
+  }
+
+  #search-area {
+    margin: 0 0 0 10rem;
+    width: 100%;
+  }
+
+  #results {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .card-container {
+    display: flex;
+    width: 350px;
+    flex-wrap: wrap;
+    flex-direction: row;
+  }
+
+  .book-info {
+    width: 50%;
+    order: 1;
+    padding-left: 1rem;
+  }
+
+  a.button {
+    width: 100%;
+    order: 2;
+  }
+
+  .cover-image {
+    order: 0;
+    margin-top: 0;
+  }
+
   #results-area {
     margin: 0 auto;
     max-width: 735px;
